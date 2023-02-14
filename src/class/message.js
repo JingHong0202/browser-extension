@@ -1,6 +1,6 @@
 export default class MessageUtils {
   constructor() {
-    chrome.runtime.onMessage.addListener();
+    chrome.runtime.onMessage.addListener(this.onMessage.bind(this));
   }
 
   async init(child) {
@@ -23,10 +23,10 @@ export default class MessageUtils {
     switch (type) {
       case 'init':
         sendResponse(args);
-        args = null
+        args = null;
         break;
       default:
-        console.log(arguments)
+        console.log(arguments);
     }
   }
 }

@@ -1,6 +1,6 @@
-// import MessageUtils from '@/class/message';
+import MessageUtils from '@/class/message.js';
 
-// const _message = new MessageUtils()
+const message = new MessageUtils();
 
 // chrome.runtime.onMessage.addListener(function (
 //   { type, data },
