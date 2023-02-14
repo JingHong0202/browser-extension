@@ -17,5 +17,6 @@
       "run_at": "document_start",
       "js": ["./scripts/content/inject.js"]
     }
-  ]
+  ],
+  "host_permissions": ["<all_urls>"]
 }
