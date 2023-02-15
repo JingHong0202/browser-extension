@@ -4,12 +4,11 @@ export default class MessageUtils {
   }
 
   async init(child) {
-    let tree = await child.getTree('init', true);
-    chrome.runtime.onMessage.addListener(this.onMessage.bind(this, tree));
+    this.tree = await child.getTree({ sync: true });
   }
 
   send(type, data) {
-    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    chrome.tabs.query({ currentWindow: true, active: true }, function(tabs) {
       tabs.forEach(tab => {
         chrome.tabs.sendMessage(tab.id, {
           type,
@@ -19,11 +18,10 @@ export default class MessageUtils {
     });
   }
 
-  onMessage(args, { type }, sender, sendResponse) {
+  onMessage({ type }, sender, sendResponse) {
     switch (type) {
       case 'init':
-        sendResponse(args);
-        args = null;
+        sendResponse(this.tree);
         break;
       default:
         console.log(arguments);

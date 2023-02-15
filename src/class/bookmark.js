@@ -1,6 +1,5 @@
 import MessageUtils from './message';
 
-
 export default class BookMarkUtils extends MessageUtils {
   constructor() {
     // init step
@@ -9,25 +8,25 @@ export default class BookMarkUtils extends MessageUtils {
      *  only title and url changes trigger this.
      */
     chrome.bookmarks.onChanged.addListener(() => {
-      this.getTree('changed');
+      this.getTree({ type: 'changed' });
     });
 
     chrome.bookmarks.onCreated.addListener(() => {
-      this.getTree('created');
+      this.getTree({ type: 'created' });
     });
     chrome.bookmarks.onMoved.addListener(() => {
-      this.getTree('move');
+      this.getTree({ type: 'move' });
     });
     chrome.bookmarks.onRemoved.addListener(() => {
-      this.getTree('remove');
+      this.getTree({ type: 'remove' });
     });
     chrome.bookmarks.onImportEnded.addListener(() => {
-      this.getTree('importended');
+      this.getTree({ type: 'importended' });
     });
     super().init(this);
   }
 
-  getTree(type, sync) {
+  getTree({ type, sync }) {
     if (!sync) {
       chrome.bookmarks.getTree(res => {
         this.send(type, res);
