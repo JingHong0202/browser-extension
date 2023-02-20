@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "types": ["vite/client"],
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom", "DOM.Iterable"],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "baseUrl": "./",
+    "declaration": true
+  },
+  "include": ["src/**/*"]
+}

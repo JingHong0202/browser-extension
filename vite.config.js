@@ -1,9 +1,9 @@
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import bex from './plugin';
+import bex from 'vite-plugin-br-ext';
 import { join } from 'path';
 import { cwd } from 'process';
-import { chromeExtension } from "./plugin-2";
+// import { chromeExtension } from "./plugin-2";
 
 
 export default defineConfig(({ command, mode }) => {
@@ -20,7 +20,7 @@ export default defineConfig(({ command, mode }) => {
       // legacy({
       //   targets: ['defaults', 'not IE 11'],
       // }),
-      bex(true)
+      bex()
       // chromeExtension(),
     ],
     build: {

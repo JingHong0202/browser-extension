@@ -7,31 +7,12 @@
     "build": "vite build"
   },
   "dependencies": {
-    "glob": "^8.0.3",
-    "less": "^4.1.3",
-    "stylus": "^0.59.0",
-    "typescript": "4.2.4",
-    "vue": "^3.2.25",
-    "vue-router": "4"
+    "vue": "^3.2.25"
   },
   "devDependencies": {
-    "@vitejs/plugin-legacy": "^1.8.2",
     "@vitejs/plugin-vue": "^2.3.3",
-    "@vitejs/plugin-vue-jsx": "^1.3.10",
-    "autoprefixer": "^10.4.7",
-    "cssnano": "^5.1.12",
-    "cssnano-preset-advanced": "^5.3.8",
-    "postcss": ">=8.2.15 <9.0.0",
-    "postcss-px-to-viewport": "^1.1.1",
     "sass": "^1.52.3",
-    "terser": "^5.15.1",
     "vite": "^3.1.7",
-    "vite-plugin-br-ext": "./plugin",
-    "vite-plugin-chrome-extension": "^0.0.7",
-    "vite-plugin-inspect": "^0.7.5"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    "vite-plugin-br-ext": "^0.0.3"
+  }
 }
