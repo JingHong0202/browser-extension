@@ -1,16 +1,15 @@
 <template>
-  <h1 class="hh" @click="to">hello</h1>
+  <list v-for="i in 10"></list>
 </template>
 
 <script setup>
-function to() {
- console.log(1)
-}
+import list from './components/list'
+
 </script>  
 
 
-<style  lang="scss">
-.hh {
+<style >
+.hh1 { 
   font-size: 50px;
 }
 </style>

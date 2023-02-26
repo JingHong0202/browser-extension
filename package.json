@@ -3,16 +3,20 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build:watch": "vite build --watch",
+    "dev": "vite build -w",
     "build": "vite build"
   },
+  "type": "module",
   "dependencies": {
-    "vue": "^3.2.25"
+    "vite-plugin-web-extension": "^2.0.1",
+    "vue": "^3.2.25",
+    "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.217",
     "@vitejs/plugin-vue": "^2.3.3",
     "sass": "^1.52.3",
     "vite": "^3.1.7",
-    "vite-plugin-br-ext": "^0.0.3"
+    "vite-plugin-br-ext": "./plugin"
   }
 }
