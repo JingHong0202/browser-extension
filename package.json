@@ -2,21 +2,21 @@
   "name": "bookmark-index",
   "private": true,
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "dev": "vite build -w",
     "build": "vite build"
   },
-  "type": "module",
   "dependencies": {
-    "vite-plugin-web-extension": "^2.0.1",
-    "vue": "^3.2.25",
+    "vue": "^3.2.47",
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.217",
-    "@vitejs/plugin-vue": "^2.3.3",
+    "@types/webextension-polyfill": "^0.10.0",
+    "@vitejs/plugin-vue": "^2.3.4",
     "sass": "^1.52.3",
-    "vite": "^3.1.7",
-    "vite-plugin-br-ext": "./plugin"
+    "vite": "4.2.0",
+    "vite-plugin-br-ext": "latest"
   }
 }

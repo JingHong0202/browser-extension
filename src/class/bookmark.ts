@@ -1,4 +1,5 @@
-import MessageUtils from './message';
+import polyfill from 'webextension-polyfill'
+import MessageUtils from './message'
 
 export default class BookMarkUtils extends MessageUtils {
   constructor() {
@@ -7,36 +8,37 @@ export default class BookMarkUtils extends MessageUtils {
     /**
      *  only title and url changes trigger this.
      */
-    chrome.bookmarks.onChanged.addListener(() => {
-      this.getTree({ type: 'changed' });
-    });
+    polyfill.bookmarks.onChanged.addListener(() => {
+      this.getTree({ type: 'changed' })
+    })
 
-    chrome.bookmarks.onCreated.addListener(() => {
-      this.getTree({ type: 'created' });
-    });
-    chrome.bookmarks.onMoved.addListener(() => {
-      this.getTree({ type: 'move' });
-    });
-    chrome.bookmarks.onRemoved.addListener(() => {
-      this.getTree({ type: 'remove' });
-    });
-    chrome.bookmarks.onImportEnded.addListener(() => {
-      this.getTree({ type: 'importended' });
-    });
-    super().init(this);
+    polyfill.bookmarks.onCreated.addListener(() => {
+      this.getTree({ type: 'created' })
+    })
+    polyfill.bookmarks.onMoved.addListener(() => {
+      this.getTree({ type: 'move' })
+    })
+    polyfill.bookmarks.onRemoved.addListener(() => {
+      this.getTree({ type: 'remove' })
+    })
+    // polyfill.bookmarks.onImportEnded.addListener(() => {
+    //   this.getTree({ type: 'importended' })
+    // })
+    ;(<any>super()).init(this)
   }
 
-  getTree({ type, sync }) {
+  async getTree({ type, sync }: { type?: string; sync?: boolean }) {
     if (!sync) {
-      chrome.bookmarks.getTree(res => {
-        this.send(type, res);
-      });
+      polyfill.bookmarks.getTree().then(res => {
+        this.send(type!, res)
+      })
     } else {
-      return new Promise((resolve, reject) => {
-        chrome.bookmarks.getTree(res => {
-          (res && resolve(res)) || reject('getTree sync error');
-        });
-      });
+      try {
+        const res = await polyfill.bookmarks.getTree()
+        return res
+      } catch (error) {
+        throw Error(String(error))
+      }
     }
   }
 }

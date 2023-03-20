@@ -1,16 +1,18 @@
-<template>
-  <list v-for="i in 10"></list>
+<template> 
 </template>
 
-<script setup>
-import list from './components/list'
+<script setup lang="ts">
+import MessageUtils from '@/class/message'
+import polyfill from 'webextension-polyfill'
 
-</script>  
+new MessageUtils();
+// polyfill.runtime.sendMessage(
+//   polyfill.runtime.id,
+//   {
+//     type: 'init',
+//   }
+ 
+// ).then(res => console.log(res))
+</script>
 
-
-<style >
-.hh1 { 
-  font-size: 50px;
-}
-</style>
-
+<style lang="scss"></style>

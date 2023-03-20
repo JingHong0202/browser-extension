@@ -1,30 +1,38 @@
+import polyfill from 'webextension-polyfill'
+import type BookMarkUtils from './bookmark'
+
 export default class MessageUtils {
+  tree!: polyfill.Bookmarks.BookmarkTreeNode[]
   constructor() {
-    chrome.runtime.onMessage.addListener(this.onMessage.bind(this));
+    polyfill.runtime.onMessage.addListener(this.onMessage.bind(this))
   }
 
-  async init(child) {
-    this.tree = await child.getTree({ sync: true });
+  async init(child: BookMarkUtils) {
+    this.tree = (await child.getTree({ sync: true }))!
   }
 
-  send(type, data) {
-    chrome.tabs.query({ currentWindow: true, active: true }, function(tabs) {
+  send(type: string, data: polyfill.Bookmarks.BookmarkTreeNode[]) {
+    polyfill.tabs.query({ currentWindow: true, active: true }).then(tabs => {
       tabs.forEach(tab => {
-        chrome.tabs.sendMessage(tab.id, {
+        polyfill.tabs.sendMessage(tab.id!, {
           type,
           data,
-        });
-      });
-    });
+        })
+      })
+    })
   }
 
-  onMessage({ type }, sender, sendResponse) {
+  onMessage(
+    { type }: any,
+    sender: polyfill.Runtime.MessageSender,
+    sendResponse: (...args: unknown[]) => void
+  ) {
     switch (type) {
       case 'init':
-        sendResponse(this.tree);
-        break;
+        sendResponse(this.tree)
+        break
       default:
-        console.log(arguments);
+        console.log(arguments)
     }
   }
 }
