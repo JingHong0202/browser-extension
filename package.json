@@ -2,9 +2,8 @@
   "name": "bookmark-index",
   "private": true,
   "version": "0.0.1",
-  "type": "module",
   "scripts": {
-    "dev": "vite build -w",
+    "dev": "vite build -w --mode development",
     "build": "vite build"
   },
   "dependencies": {
@@ -17,6 +16,6 @@
     "@vitejs/plugin-vue": "^2.3.4",
     "sass": "^1.52.3",
     "vite": "4.2.0",
-    "vite-plugin-br-ext": "latest"
+    "vite-plugin-br-ext": "0.0.14"
   }
 }

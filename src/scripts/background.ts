@@ -1,4 +1,4 @@
-import BookMarkUtils from '@/class/bookmark';
+import BookMarkUtils from '@/class/bookmark'
 
 //  chrome.bookmarks.getTree(function (res) {
 //     send('init', res);
@@ -10,4 +10,4 @@ import BookMarkUtils from '@/class/bookmark';
 //     target: { tabId: activeInfo.tabId },
 //   });
 // });
-const _bookmark = new BookMarkUtils();
+const _bookmark = new BookMarkUtils()

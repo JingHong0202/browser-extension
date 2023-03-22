@@ -11,7 +11,16 @@ export default defineConfig(({ command, mode }) => {
       },
       extensions: ['.vue', '.js', '.ts'],
     },
-    plugins: [vue(), bex(true)],
+    plugins: [
+      vue(),
+      bex({
+        mode,
+        reload: {
+          browser:
+            'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+        },
+      }),
+    ],
     // root: 'src',
     build: {
       rollupOptions: {
