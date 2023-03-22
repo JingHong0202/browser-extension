@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import bex from 'vite-plugin-br-ext'
+import bex from './plugin'
 import { join } from 'path'
 
 export default defineConfig(({ command, mode }) => {
@@ -17,7 +17,7 @@ export default defineConfig(({ command, mode }) => {
         mode,
         reload: {
           browser:
-            'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+            '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
         },
       }),
     ],

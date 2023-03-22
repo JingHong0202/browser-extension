@@ -10,8 +10,9 @@ document.addEventListener('DOMContentLoaded', function () {
   left: 0;
   right: 0;
   bottom: 0;z-index:999`
-  const shadowRoot = wrapNode.attachShadow({ mode: 'open' })
-  shadowRoot.append(contentNode)
+  const shadowRoot = wrapNode.attachShadow({ mode: 'closed' })
+  shadowRoot.innerHTML = `<style>${__GLOBAL_CSS}</style>`
+  shadowRoot.appendChild(contentNode)
   document.body.appendChild(wrapNode)
   createApp(App).mount(contentNode)
 })
