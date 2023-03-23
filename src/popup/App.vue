@@ -16,7 +16,6 @@ polyfill.runtime
     type: 'init',
   })
   .then(res => (val.value = res))
-
 </script>
 
 <style lang="scss" scoped>

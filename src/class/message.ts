@@ -1,6 +1,11 @@
 import polyfill from 'webextension-polyfill'
 import type BookMarkUtils from './bookmark'
 
+type TypeList = {
+  type: 'changed' | 'remove' | 'created' | 'move' | 'init'
+  data: polyfill.Bookmarks.BookmarkTreeNode[]
+}
+
 export default class MessageUtils {
   tree!: polyfill.Bookmarks.BookmarkTreeNode[]
   constructor() {
@@ -23,11 +28,11 @@ export default class MessageUtils {
   }
 
   onMessage(
-    { type }: any,
+    data: TypeList,
     sender: polyfill.Runtime.MessageSender,
     sendResponse: (...args: unknown[]) => void
   ) {
-    switch (type) {
+    switch (data.type) {
       case 'init':
         sendResponse(this.tree)
         break
