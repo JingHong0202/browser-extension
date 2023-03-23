@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/chrome": "^0.0.217",
     "@types/webextension-polyfill": "^0.10.0",
-    "@vitejs/plugin-vue": "^2.3.4",
+    "@vitejs/plugin-vue": "^4.1.0",
     "sass": "^1.52.3",
     "vite": "4.2.0",
     "vite-plugin-br-ext": "0.0.14"

@@ -8,6 +8,7 @@
 import { ref } from 'vue'
 import MessageUtils from '@/class/message'
 import polyfill from 'webextension-polyfill'
+
 const val = ref()
 new MessageUtils()
 polyfill.runtime
@@ -16,15 +17,6 @@ polyfill.runtime
   })
   .then(res => (val.value = res))
 
-// const style = document.createElement('link')
-// style.href = chrome.runtime.getURL(
-//   chrome.runtime.getManifest().content_scripts[0].css[0]
-// )
-// style.rel = "stylesheet"
-// document.querySelector('')
-// nextTick(() => {
-//  style.value = chrome.runtime.getManifest().content_scripts[0].css[0]
-// })
 </script>
 
 <style lang="scss" scoped>

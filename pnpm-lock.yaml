@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@types/chrome': ^0.0.217
   '@types/webextension-polyfill': ^0.10.0
-  '@vitejs/plugin-vue': ^2.3.4
+  '@vitejs/plugin-vue': ^4.1.0
   sass: ^1.52.3
   vite: 4.2.0
   vite-plugin-br-ext: 0.0.14
@@ -17,7 +17,7 @@ dependencies:
 devDependencies:
   '@types/chrome': 0.0.217
   '@types/webextension-polyfill': 0.10.0
-  '@vitejs/plugin-vue': 2.3.4_vite@4.2.0+vue@3.2.47
+  '@vitejs/plugin-vue': 4.1.0_vite@4.2.0+vue@3.2.47
   sass: 1.59.3
   vite: 4.2.0_sass@1.59.3
   vite-plugin-br-ext: 0.0.14_vite@4.2.0
@@ -669,11 +669,11 @@ packages:
       '@types/node': 18.15.5
     dev: true
 
-  /@vitejs/plugin-vue/2.3.4_vite@4.2.0+vue@3.2.47:
-    resolution: {integrity: sha512-IfFNbtkbIm36O9KB8QodlwwYvTEsJb4Lll4c2IwB3VHc2gie2mSPtSzL0eYay7X2jd/2WX02FjSGTWR6OPr/zg==}
-    engines: {node: '>=12.0.0'}
+  /@vitejs/plugin-vue/4.1.0_vite@4.2.0+vue@3.2.47:
+    resolution: {integrity: sha512-++9JOAFdcXI3lyer9UKUV4rfoQ3T1RN8yDqoCLar86s0xQct5yblxAE+yWgRnU5/0FOlVCpTZpYSBV/bGWrSrQ==}
+    engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
-      vite: ^2.5.10
+      vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
       vite: 4.2.0_sass@1.59.3
