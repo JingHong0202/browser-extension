@@ -1,24 +1,24 @@
 {
-  "compilerOptions": {
-    "isolatedModules": true,
-    "skipLibCheck": true,
-    "types": ["vite/client"],
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "allowJs": true,
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom", "DOM.Iterable"],
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "baseUrl": "./",
-    "declaration": true
-  },
-  "include": ["src/**/*"]
+	"compilerOptions": {
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		"types": ["vite/client", "chrome"],
+		"target": "esnext",
+		"useDefineForClassFields": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"allowJs": true,
+		"strict": true,
+		"jsx": "preserve",
+		"sourceMap": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"lib": ["esnext", "dom", "DOM.Iterable"],
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"baseUrl": "./",
+		"declaration": true
+	},
+	"include": ["src/**/*"]
 }

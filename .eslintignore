@@ -1,0 +1,8 @@
+plugin*?
+tsconfig.json
+.eslint*
+types
+dist
+.*
+prettier*
+*.config.*

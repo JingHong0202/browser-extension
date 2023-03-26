@@ -1,43 +1,51 @@
+import { TypeList } from '@/types/bookmark'
+import { SendOptions } from '@/types/message'
 import polyfill from 'webextension-polyfill'
-import type BookMarkUtils from './bookmark'
+import Events from './event'
 
-type TypeList = {
-  type: 'changed' | 'remove' | 'created' | 'move' | 'init'
-  data: polyfill.Bookmarks.BookmarkTreeNode[]
-}
+export default class MessageUtils<T> {
+	data!: T
+	eventsHandler: Events<T>
+	constructor() {
+		polyfill.runtime.onMessage.addListener(this.onMessage.bind(this))
+		this.eventsHandler = new Events()
+	}
 
-export default class MessageUtils {
-  tree!: polyfill.Bookmarks.BookmarkTreeNode[]
-  constructor() {
-    polyfill.runtime.onMessage.addListener(this.onMessage.bind(this))
-  }
+	async init(initCallBack: () => Promise<T>) {
+		this.data = await initCallBack()
+	}
 
-  async init(child: BookMarkUtils) {
-    this.tree = (await child.getTree({ sync: true }))!
-  }
+	sendMessage(options: SendOptions<T>) {
+		if (options.to === 'background') {
+			return polyfill.runtime.sendMessage(polyfill.runtime.id, {
+				type: options.type,
+				data: options.data || {}
+			})
+		} else {
+			polyfill.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+				tabs.forEach(tab => {
+					polyfill.tabs.sendMessage(tab.id!, {
+						type: options.type,
+						data: options.data
+					})
+				})
+			})
+		}
+	}
 
-  send(type: string, data: polyfill.Bookmarks.BookmarkTreeNode[]) {
-    polyfill.tabs.query({ currentWindow: true, active: true }).then(tabs => {
-      tabs.forEach(tab => {
-        polyfill.tabs.sendMessage(tab.id!, {
-          type,
-          data,
-        })
-      })
-    })
-  }
-
-  onMessage(
-    data: TypeList,
-    sender: polyfill.Runtime.MessageSender,
-    sendResponse: (...args: unknown[]) => void
-  ) {
-    switch (data.type) {
-      case 'init':
-        sendResponse(this.tree)
-        break
-      default:
-        console.log(arguments)
-    }
-  }
+	onMessage(
+		data: TypeList<T>,
+		sender: polyfill.Runtime.MessageSender,
+		sendResponse: (...args: unknown[]) => void
+	) {
+		switch (data.type) {
+			case 'init':
+				sendResponse(this.data)
+				break
+			default:
+				// console.log(data)
+				this.eventsHandler.trigger({ eventName: 'message' }, data)
+			// this.data = data.data
+		}
+	}
 }

@@ -9,11 +9,11 @@ new MessageUtils()
 //   console.log(arguments);
 // });
 chrome.runtime.sendMessage(
-  chrome.runtime.id,
-  {
-    type: 'init',
-  },
-  response => {
-    console.log(response);
-  }
-);
+	chrome.runtime.id,
+	{
+		type: 'init'
+	},
+	response => {
+		console.log(response)
+	}
+)
