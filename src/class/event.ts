@@ -1,12 +1,26 @@
-import { EventItem, Trigger, EventName } from '@/types/event'
+import type { EventItem, Trigger, EventName } from '@/types/event'
 
-export default class Events<T> {
+let instance: Events
+export default class Events {
 	eventListener: Map<EventName, EventItem> = new Map()
-	triggerIndexMap: WeakMap<Trigger<T>, string | number> = new WeakMap()
+	triggerIndexMap: WeakMap<Trigger<any>, string | number> = new WeakMap()
 
-	// constructor() {}
+	constructor() {
+		if (!instance) {
+			instance = this
+		}
+		return instance
+	}
 
-	on(eventName: EventName, trigger: Trigger<T>) {
+	static getInstance(): Events {
+		return instance
+	}
+
+	getInstance(): this {
+		return this
+	}
+
+	on<T>(eventName: EventName, trigger: Trigger<T>) {
 		if (this.eventListener.has(eventName)) {
 			const item = this.eventListener.get(eventName)
 			item!.triggers.push(trigger)
@@ -17,10 +31,9 @@ export default class Events<T> {
 		}
 	}
 
-	off(eventName: EventName, trigger?: Trigger<T>) {
-		if (this.eventListener.has(eventName)) return
+	off(eventName: EventName, trigger?: Trigger<unknown>) {
+		if (!this.eventListener.has(eventName)) return
 		const item = this.eventListener.get(eventName)
-
 		if (trigger) {
 			const index = this.triggerIndexMap.get(trigger)
 			index !== undefined && item?.triggers.splice(+index - 1, 1)
@@ -30,7 +43,10 @@ export default class Events<T> {
 	}
 
 	trigger(
-		{ eventName, trigger }: { eventName: EventName; trigger?: Trigger<T> },
+		{
+			eventName,
+			trigger
+		}: { eventName: EventName; trigger?: Trigger<unknown> },
 		...args: unknown[]
 	) {
 		if (!this.eventListener.has(eventName)) return

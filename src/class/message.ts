@@ -5,7 +5,7 @@ import Events from './event'
 
 export default class MessageUtils<T> {
 	data!: T
-	eventsHandler: Events<T>
+	eventsHandler: Events
 	constructor() {
 		polyfill.runtime.onMessage.addListener(this.onMessage.bind(this))
 		this.eventsHandler = new Events()
