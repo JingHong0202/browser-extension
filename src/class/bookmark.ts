@@ -1,6 +1,8 @@
 import polyfill from 'webextension-polyfill'
 import MessageUtils from './message'
 import type { BookMarkAction } from '@/types/bookmark'
+import { TypeList } from '@/types/bookmark'
+
 export default class BookMarkUtils extends MessageUtils<
 	polyfill.Bookmarks.BookmarkTreeNode[]
 > {
@@ -27,6 +29,21 @@ export default class BookMarkUtils extends MessageUtils<
 		//   this.getTree({ type: 'importended' })
 		// })
 		this.initData()
+	}
+
+	onMessage(
+		data: TypeList<unknown>,
+		sender: polyfill.Runtime.MessageSender,
+		sendResponse: (...args: unknown[]) => void
+	) {
+		switch (data.type) {
+			case 'init':
+				sendResponse(this.data)
+				break
+			case 'search':
+				sendResponse(polyfill.bookmarks.search(<string>data.data))
+				break
+		}
 	}
 
 	initData() {

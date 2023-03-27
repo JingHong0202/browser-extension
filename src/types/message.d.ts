@@ -1,5 +1,5 @@
-export type SendOptions<T> = {
+export type SendOptions = {
 	type: string
-	data?: T
+	data?: unknown
 	to: 'content' | 'background'
 }

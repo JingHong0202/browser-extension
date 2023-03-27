@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TypeList } from '@/types/bookmark'
 import { SendOptions } from '@/types/message'
 import polyfill from 'webextension-polyfill'
@@ -15,11 +16,11 @@ export default class MessageUtils<T> {
 		this.data = await initCallBack()
 	}
 
-	sendMessage(options: SendOptions<T>) {
+	sendMessage(options: SendOptions) {
 		if (options.to === 'background') {
 			return polyfill.runtime.sendMessage(polyfill.runtime.id, {
 				type: options.type,
-				data: options.data || {}
+				data: options.data
 			})
 		} else {
 			polyfill.tabs.query({ currentWindow: true, active: true }).then(tabs => {
@@ -38,14 +39,11 @@ export default class MessageUtils<T> {
 		sender: polyfill.Runtime.MessageSender,
 		sendResponse: (...args: unknown[]) => void
 	) {
-		switch (data.type) {
-			case 'init':
-				sendResponse(this.data)
-				break
-			default:
-				// console.log(data)
-				this.eventsHandler.trigger({ eventName: 'message' }, data)
-			// this.data = data.data
-		}
+		// switch (data.type) {
+		// default:
+		// console.log(data)
+		this.eventsHandler.trigger({ eventName: 'message' }, data)
+		// this.data = data.data
+		// }
 	}
 }

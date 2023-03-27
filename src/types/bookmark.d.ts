@@ -5,4 +5,4 @@ export type TypeList<T> = {
 	data: T
 }
 
-export type BookMarkAction = 'changed' | 'remove' | 'created' | 'move' | 'init'
+export type BookMarkAction = 'changed' | 'remove' | 'created' | 'move' | 'init' | 'search'

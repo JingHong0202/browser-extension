@@ -30,6 +30,7 @@ module.exports = {
 		'@typescript-eslint/ban-ts-comment': 'off',
 		"@typescript-eslint/no-floating-promises": "off",
 		'no-mixed-spaces-and-tabs': 'off',
+		"@typescript-eslint/no-this-alias": "off",
 		"@typescript-eslint/no-unsafe-call": 'off',
 		// "semi": "off",
     // "@typescript-eslint/semi": "off"
