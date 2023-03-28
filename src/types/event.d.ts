@@ -3,5 +3,5 @@ export type EventItem = {
 	triggers: Trigger[]
 }
 
-export type EventName = 'message'
+export type EventName = 'message' | 'command'
 export type Trigger<T> = (...args: T[]) => Promise<T> | void

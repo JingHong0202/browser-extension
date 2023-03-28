@@ -15,5 +15,13 @@
 		}
 	],
 	"host_permissions": ["<all_urls>"],
-	"permissions": ["bookmarks", "tabs", "webRequest", "<all_urls>"]
+	"permissions": ["bookmarks", "tabs", "commands"],
+	"commands": {
+		"show-search-input": {
+			"suggested_key": {
+				"default": "Alt+S"
+			},
+			"description": "显示/隐藏书签搜索框"
+		}
+	}
 }

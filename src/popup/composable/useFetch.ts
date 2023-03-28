@@ -21,7 +21,7 @@ export function useFetch(input: Ref<string>) {
 		}
 	)
 
-  watchEffect(change)
+	watchEffect(change)
 
 	async function change() {
 		// input.value = (e.target as HTMLInputElement).value
@@ -37,5 +37,5 @@ export function useFetch(input: Ref<string>) {
 		search_tree.value = response
 	}
 
-	return { bookmark_tree, search_tree }
+	return { bookmark_tree, search_tree, message }
 }

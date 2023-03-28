@@ -39,11 +39,15 @@ export default class MessageUtils<T> {
 		sender: polyfill.Runtime.MessageSender,
 		sendResponse: (...args: unknown[]) => void
 	) {
-		// switch (data.type) {
-		// default:
-		// console.log(data)
-		this.eventsHandler.trigger({ eventName: 'message' }, data)
-		// this.data = data.data
-		// }
+		switch (data.type) {
+			case 'command':
+				this.eventsHandler.trigger({ eventName: 'command' }, data)
+				break
+			default:
+				// console.log(data)
+				this.eventsHandler.trigger({ eventName: 'message' }, data)
+			// this.data = data.data
+			// }
+		}
 	}
 }
