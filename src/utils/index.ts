@@ -3,7 +3,7 @@ function debounce(callback: (...args: any[]) => void, time = 1000) {
 	return function () {
 		if (timer) clearTimeout(timer)
 		timer = setTimeout(() => {
-			callback()
+			callback(...arguments)
 		}, time)
 	}
 }
