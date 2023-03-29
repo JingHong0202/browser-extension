@@ -14,17 +14,20 @@
 				v-show="!isExists"
 				@keydown.down.up.prevent="keypress"
 				@keydown.enter.prevent="confirm"
+				@blur="isFocus = false"
+				@focus="isFocus = true"
 				v-model="input" />
 			<span class="label">Search Bookmark</span>
 			<i class="line"></i>
-			<div class="searchbox">
+			<div class="searchbox" v-show="isFocus">
 				<div class="search-list" ref="listEle">
 					<span
 						class="search-item"
 						v-for="(bookmark, i) in search_tree"
 						:class="{ active: i === index }"
-						:key="bookmark.id"
-						>{{ bookmark.title }}: {{ bookmark.url }}</span
+						:key="bookmark.id">
+						<!-- <img :src="icon(bookmark.url)" alt="" />  -->
+						{{ bookmark.title }}: {{ bookmark.url }}</span
 					>
 				</div>
 			</div>
@@ -50,16 +53,18 @@ const input = ref(''),
 	show = ref(false),
 	isExists = ref(true)
 const { search_tree, bookmark_tree, message } = useFetch(input)
-const screen = ref(150 * window.devicePixelRatio)
+const screen = ref(150)
 const inputEle = ref<HTMLInputElement>()
 const listEle = ref<HTMLDivElement>()
 const index = ref(0)
+const isFocus = ref(false)
 // window.onresize = () => {
 // 	screen.value = queryWindowRect()
 // }
 message.eventsHandler.on<{ type: 'command'; data: string }>(
 	'command',
 	({ data }) => {
+		console.log(bookmark_tree.value)
 		if (data === 'show-search-input') {
 			if (isExists.value) isExists.value = false
 			show.value = !show.value
@@ -73,22 +78,32 @@ message.eventsHandler.on<{ type: 'command'; data: string }>(
 )
 
 function keypress(e: KeyboardEvent) {
-	index.value =
-		e.code === 'ArrowUp'
-			? Math.max(0, --index.value)
-			: Math.min(search_tree.value.length - 1, ++index.value)
+	if (e.code === 'ArrowUp') {
+		index.value =
+			index.value === 0 ? search_tree.value.length - 1 : --index.value
+	} else {
+		index.value =
+			index.value >= search_tree.value.length - 1 ? 0 : ++index.value
+	}
 	if (listEle.value?.children.length) {
 		const target = listEle.value?.children[index.value]
+		// @ts-ignore
 		listEle.value.scroll({ top: target.offsetTop })
 	}
 }
 
 function confirm() {
 	message.sendMessage({
-		type: 'openTab',
+		type: 'select',
 		data: search_tree.value[index.value],
 		to: 'background'
 	})
+}
+
+function icon(url = '') {
+	const domain =
+		url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/i) || ''
+	return `${domain[0]}/favicon.ico`
 }
 // function queryWindowRect() {
 // 	return Math.max(document.body.offsetWidth, document.body.offsetHeight) * 2.9
@@ -139,20 +154,24 @@ function transitionEnd(e: TransitionEvent) {
 	transition: all 1s;
 	background: white;
 	border-radius: 5px 5px 5px 5px;
+	overflow: hidden;
+
 	.search-list {
 		width: 100%;
 		display: flex;
-		color: #ffbc00;
+		color: #fecd49;
 		font-weight: bold;
 		flex-direction: column;
 		overflow-y: auto;
-		max-height: 200px;
+		max-height: 300px;
 		.search-item {
 			text-align: left;
-			padding: 10px 0 10px 10px;
-			transition: all 100ms;
+			padding: 10px;
+			// transition: all 100ms;
+			word-break: break-all;
 			&.active {
-				background: #1f3b34;
+				background: #fecd49;
+				color: white;
 			}
 		}
 		&::-webkit-scrollbar {

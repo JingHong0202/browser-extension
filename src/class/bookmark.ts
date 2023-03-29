@@ -43,7 +43,7 @@ export default class BookMarkUtils extends MessageUtils<
 			case 'search':
 				sendResponse(polyfill.bookmarks.search(<string>data.data))
 				break
-			case 'openTab':
+			case 'select':
 				polyfill.tabs.create({ url: data.data.url, active: false })
 				break
 		}
