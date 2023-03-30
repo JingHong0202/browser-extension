@@ -47,7 +47,6 @@ import { nextTick, ref } from 'vue'
 import { useFetch } from './composable/useFetch'
 import { debounce } from '@/utils/index'
 
-
 const input = ref(''),
 	show = ref(false),
 	isExists = ref(true)

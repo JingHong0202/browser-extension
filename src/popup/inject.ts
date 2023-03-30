@@ -21,5 +21,4 @@ document.addEventListener('DOMContentLoaded', function () {
 	font.load().then(res => {
 		document.fonts.add(res)
 	})
-	
 })

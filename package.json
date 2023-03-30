@@ -13,21 +13,21 @@
 		"webextension-polyfill": "^0.10.0"
 	},
 	"devDependencies": {
+		"@rushstack/eslint-patch": "^1.2.0",
 		"@types/chrome": "^0.0.217",
 		"@types/webextension-polyfill": "^0.10.0",
-		"@rushstack/eslint-patch": "^1.2.0",
-		"@typescript-eslint/eslint-plugin": "^5.56.0",
-		"@typescript-eslint/parser": "^5.56.0",
+		"@typescript-eslint/eslint-plugin": "^5.57.0",
+		"@typescript-eslint/parser": "^5.57.0",
 		"@vitejs/plugin-vue": "^4.1.0",
 		"@vue/eslint-config-prettier": "^7.1.0",
 		"@vue/eslint-config-typescript": "^11.0.2",
-		"eslint": "^8.36.0",
-		"prettier": "^2.8.7",
+		"eslint": "^8.37.0",
 		"eslint-plugin-vue": "^9.10.0",
-		"sass": "^1.52.3",
+		"prettier": "^2.8.7",
+		"sass": "^1.60.0",
 		"typescript": "^5.0.2",
 		"vite": "4.2.0",
-		"vite-plugin-br-ext": "^0.0.15",
+		"vite-plugin-br-ext": "^0.0.16",
 		"vue-tsc": "^1.2.0"
 	}
 }

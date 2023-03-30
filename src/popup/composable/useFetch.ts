@@ -36,7 +36,7 @@ export function useFetch(input: Ref<string>) {
 
 			// if (!response?.length) return
 			search_tree.value = response.filter(bookmark => bookmark.url)
-		}, 350)
+		}, 200)
 	)
 
 	return { bookmark_tree, search_tree, message }

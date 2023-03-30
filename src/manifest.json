@@ -11,7 +11,9 @@
 		{
 			"matches": ["<all_urls>"],
 			"run_at": "document_start",
-			"js": ["popup/inject.ts"]
+			"js": ["popup/inject.ts"],
+			"match_origin_as_fallback": true,
+			"runAt": "document_idle"
 		}
 	],
 	"host_permissions": ["<all_urls>"],

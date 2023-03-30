@@ -9,6 +9,6 @@ module.exports = {
 	arrowParens: 'avoid',
 	useTabs: true,
 	trailingComma: 'none',
-	tabWidth: 2,
+	tabWidth: 2
 	// vueIndentScriptAndStyle: true
 }
