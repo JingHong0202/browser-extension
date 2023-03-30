@@ -44,7 +44,10 @@ export default class BookMarkUtils extends MessageUtils<
 				sendResponse(polyfill.bookmarks.search(<string>data.data))
 				break
 			case 'select':
-				polyfill.tabs.create({ url: data.data.url, active: false })
+				polyfill.tabs.create({
+					url: (<polyfill.Bookmarks.BookmarkTreeNode>data.data).url,
+					active: false
+				})
 				break
 		}
 	}

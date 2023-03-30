@@ -13,35 +13,32 @@
 				type="text"
 				v-show="!isExists"
 				@keydown.down.up.prevent="keypress"
-				@keydown.enter.prevent="confirm"
+				@keydown.enter.prevent="confirm()"
 				@blur="isFocus = false"
 				@focus="isFocus = true"
 				v-model="input" />
 			<span class="label">Search Bookmark</span>
 			<i class="line"></i>
-			<div class="searchbox" v-show="isFocus">
+			<div
+				class="searchbox"
+				:style="
+					isFocus
+						? 'opacity:1;transform:scale(1)'
+						: 'opacity:0;transform:scale(0)'
+				">
 				<div class="search-list" ref="listEle">
-					<span
+					<div
 						class="search-item"
 						v-for="(bookmark, i) in search_tree"
 						:class="{ active: i === index }"
+						@mousedown.stop="confirm(i)"
 						:key="bookmark.id">
 						<!-- <img :src="icon(bookmark.url)" alt="" />  -->
-						{{ bookmark.title }}: {{ bookmark.url }}</span
-					>
+						{{ bookmark.title }}: {{ bookmark.url }}
+					</div>
 				</div>
 			</div>
 		</div>
-		<!-- `<div class="searchbox">
-			<div class="search-list">
-				<span
-					class="search-item"
-					v-for="bookmark in search_tree"
-					:key="bookmark.id"
-					>{{ bookmark.title }}</span
-				>
-			</div>
-		</div>` -->
 	</div>
 </template>
 
@@ -49,6 +46,8 @@
 import { nextTick, ref } from 'vue'
 import { useFetch } from './composable/useFetch'
 import { debounce } from '@/utils/index'
+
+
 const input = ref(''),
 	show = ref(false),
 	isExists = ref(true)
@@ -58,13 +57,11 @@ const inputEle = ref<HTMLInputElement>()
 const listEle = ref<HTMLDivElement>()
 const index = ref(0)
 const isFocus = ref(false)
-// window.onresize = () => {
-// 	screen.value = queryWindowRect()
-// }
+
 message.eventsHandler.on<{ type: 'command'; data: string }>(
 	'command',
 	({ data }) => {
-		console.log(bookmark_tree.value)
+		// console.log(bookmark_tree.value)
 		if (data === 'show-search-input') {
 			if (isExists.value) isExists.value = false
 			show.value = !show.value
@@ -92,12 +89,16 @@ function keypress(e: KeyboardEvent) {
 	}
 }
 
-function confirm() {
+function confirm(clickIndex?: number) {
 	message.sendMessage({
 		type: 'select',
-		data: search_tree.value[index.value],
+		data: search_tree.value[
+			(clickIndex !== undefined && !isNaN(clickIndex) && clickIndex) ||
+				index.value
+		],
 		to: 'background'
 	})
+	inputEle.value?.focus()
 }
 
 function icon(url = '') {
@@ -105,32 +106,6 @@ function icon(url = '') {
 		url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/i) || ''
 	return `${domain[0]}/favicon.ico`
 }
-// function queryWindowRect() {
-// 	return Math.max(document.body.offsetWidth, document.body.offsetHeight) * 2.9
-// }
-// function getRatio() {
-// 	var ratio = 0
-// 	var screen = window.screen
-// 	var ua = navigator.userAgent.toLowerCase()
-
-// 	if (window.devicePixelRatio !== undefined) {
-// 		ratio = window.devicePixelRatio
-// 	} else if (~ua.indexOf('msie')) {
-// 		if (screen.deviceXDPI && screen.logicalXDPI) {
-// 			ratio = screen.deviceXDPI / screen.logicalXDPI
-// 		}
-// 	} else if (
-// 		window.outerWidth !== undefined &&
-// 		window.innerWidth !== undefined
-// 	) {
-// 		ratio = window.outerWidth / window.innerWidth
-// 	}
-
-// 	if (ratio) {
-// 		ratio = Math.round(ratio * 100)
-// 	}
-// 	return ratio
-// }
 
 function transitionEnd(e: TransitionEvent) {
 	if (
@@ -151,24 +126,33 @@ function transitionEnd(e: TransitionEvent) {
 	width: 100%;
 	display: flex;
 	align-items: center;
-	transition: all 1s;
-	background: white;
-	border-radius: 5px 5px 5px 5px;
+	transition: opacity 0.5s, transform 0.5s;
+	transform-origin: top left;
+	background: rgb(240, 178, 8);
+	border-radius: 0px 0px 5px 5px;
 	overflow: hidden;
 
 	.search-list {
 		width: 100%;
 		display: flex;
-		color: #fecd49;
+		color: white;
 		font-weight: bold;
 		flex-direction: column;
+		transition: all 500ms;
 		overflow-y: auto;
 		max-height: 300px;
 		.search-item {
 			text-align: left;
 			padding: 10px;
-			// transition: all 100ms;
+			display: block;
+			font-size: 14px;
+			cursor: pointer;
 			word-break: break-all;
+			box-sizing: border-box;
+			&:hover {
+				background: #fecd49;
+				color: white;
+			}
 			&.active {
 				background: #fecd49;
 				color: white;
@@ -193,7 +177,7 @@ function transitionEnd(e: TransitionEvent) {
 		width: 100%;
 		height: 2px;
 		background: #ffbc00;
-		border-radius: 4px;
+		border-radius: 4px 4px 0 0;
 		transition: 0.5s;
 		pointer-events: none;
 		z-index: 9;
@@ -239,6 +223,7 @@ function transitionEnd(e: TransitionEvent) {
 
 .wrap {
 	width: 100%;
+	font-family: 'myfont';
 	height: 100%;
 	display: flex;
 	align-items: center;
@@ -249,7 +234,7 @@ function transitionEnd(e: TransitionEvent) {
 	right: 0;
 	bottom: 0;
 	transition: background-color 500ms;
-	z-index: 999;
+	z-index: 99999;
 	&::before {
 		position: absolute;
 		left: 0;
@@ -292,7 +277,7 @@ function transitionEnd(e: TransitionEvent) {
 	&.hover::before,
 	&.hover::after {
 		background: #1f3b34;
-		transform: scale(v-bind('screen'));
+		transform: scale(v-bind('screen'), v-bind('screen'));
 	}
 }
 </style>

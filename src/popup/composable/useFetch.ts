@@ -1,7 +1,8 @@
-import { Ref, ref, watchEffect } from 'vue'
+import { Ref, ref, watch } from 'vue'
 import MessageUtils from '@/class/message'
 import polyfill from 'webextension-polyfill'
 import { TypeList } from '@/types/bookmark'
+import { debounce } from '@/utils/index'
 
 export function useFetch(input: Ref<string>) {
 	const bookmark_tree = ref<polyfill.Bookmarks.BookmarkTreeNode[]>([]),
@@ -13,29 +14,30 @@ export function useFetch(input: Ref<string>) {
 	message
 		.sendMessage({ type: 'init', to: 'background' })!
 		.then(res => (bookmark_tree.value = res))
-
+	console.log(bookmark_tree)
 	message.eventsHandler.on<TypeList<polyfill.Bookmarks.BookmarkTreeNode[]>>(
 		'message',
 		({ type, data }) => {
 			bookmark_tree.value = data
 		}
 	)
+	watch(
+		input,
+		debounce(async () => {
+			const response = <polyfill.Bookmarks.BookmarkTreeNode[]>(
+				await message.sendMessage({
+					to: 'background',
+					type: 'search',
+					data: input.value
+				})
+			)
 
-	watchEffect(change)
+			// const filter = response.filter(bookmark => bookmark.url)
 
-	async function change() {
-		// input.value = (e.target as HTMLInputElement).value
-		const response = <polyfill.Bookmarks.BookmarkTreeNode[]>(
-			await message.sendMessage({
-				to: 'background',
-				type: 'search',
-				data: input.value
-			})
-		)
-
-		if (!response?.length) return
-		search_tree.value = response
-	}
+			// if (!response?.length) return
+			search_tree.value = response.filter(bookmark => bookmark.url)
+		}, 350)
+	)
 
 	return { bookmark_tree, search_tree, message }
 }

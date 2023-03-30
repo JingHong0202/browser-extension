@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import polyfill from 'webextension-polyfill'
 import App from './App.vue'
 // import styles from './style.scss?inline'
 
@@ -13,4 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	shadowRoot.appendChild(contentNode)
 	document.body.appendChild(wrapNode)
 	createApp(App).mount(contentNode)
+	const font = new FontFace(
+		'myfont',
+		`url(${polyfill.runtime.getURL('assets/font/Alimama_ShuHeiTi_Bold.ttf')})`
+	)
+	font.load().then(res => {
+		document.fonts.add(res)
+	})
+	
 })
