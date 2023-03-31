@@ -19,24 +19,32 @@
 				v-model="input" />
 			<span class="label">Search Bookmark</span>
 			<i class="line"></i>
-			<div
-				class="searchbox"
-				:style="
+			<div class="searchbox">
+				<!-- :style="
 					isFocus
 						? 'opacity:1;transform:scale(1)'
 						: 'opacity:0;transform:scale(0)'
-				">
-				<div class="search-list" ref="listEle">
+				" -->
+				<!-- <div class="search-list" ref="listEle">
 					<div
 						class="search-item"
 						v-for="(bookmark, i) in search_tree"
 						:class="{ active: i === index }"
 						@mousedown.stop="confirm(i)"
 						:key="bookmark.id">
-						<!-- <img :src="icon(bookmark.url)" alt="" />  -->
 						{{ bookmark.title }}: {{ bookmark.url }}
 					</div>
-				</div>
+				</div> -->
+				<virtual-list :data="search_tree" :itemSize="100">
+					<div
+						class="search-item"
+						v-for="(bookmark, i) in search_tree"
+						:class="{ active: i === index }"
+						@mousedown.stop="confirm(i)"
+						:key="bookmark.id">
+						{{ bookmark.title }}: {{ bookmark.url }}
+					</div>
+				</virtual-list>
 			</div>
 		</div>
 	</div>
@@ -46,6 +54,7 @@
 import { nextTick, ref } from 'vue'
 import { useFetch } from './composable/useFetch'
 import { debounce } from '@/utils/index'
+import virtualList from './components/virtual-list.vue'
 
 const input = ref(''),
 	show = ref(false),
@@ -81,11 +90,11 @@ function keypress(e: KeyboardEvent) {
 		index.value =
 			index.value >= search_tree.value.length - 1 ? 0 : ++index.value
 	}
-	if (listEle.value?.children.length) {
-		const target = listEle.value?.children[index.value]
-		// @ts-ignore
-		listEle.value.scroll({ top: target.offsetTop })
-	}
+	// if (listEle.value?.children.length) {
+	// 	const target = listEle.value?.children[index.value]
+	// 	// @ts-ignore
+	// 	listEle.value.scroll({ top: target.offsetTop })
+	// }
 }
 
 function confirm(clickIndex?: number) {
@@ -123,6 +132,7 @@ function transitionEnd(e: TransitionEvent) {
 	// bottom: 0;
 	// height: 100%;
 	width: 100%;
+	height: 300px;
 	display: flex;
 	align-items: center;
 	transition: opacity 0.5s, transform 0.5s;
@@ -145,6 +155,7 @@ function transitionEnd(e: TransitionEvent) {
 			padding: 10px;
 			display: block;
 			font-size: 14px;
+			height: 100px;
 			cursor: pointer;
 			word-break: break-all;
 			box-sizing: border-box;
@@ -157,9 +168,9 @@ function transitionEnd(e: TransitionEvent) {
 				color: white;
 			}
 		}
-		&::-webkit-scrollbar {
-			display: none; /* Chrome Safari */
-		}
+		// &::-webkit-scrollbar {
+		// 	display: none; /* Chrome Safari */
+		// }
 	}
 }
 .inputbox {
