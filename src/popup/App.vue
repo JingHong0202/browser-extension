@@ -20,38 +20,41 @@
 			<span class="label">Search Bookmark</span>
 			<i class="line"></i>
 			<div class="searchbox">
-				<!-- :style="
+				<!-- 		:style="
 					isFocus
 						? 'opacity:1;transform:scale(1)'
 						: 'opacity:0;transform:scale(0)'
 				" -->
-				<!-- <div class="search-list" ref="listEle">
-					<div
+				<div class="search-list">
+					<!-- <div
 						class="search-item"
 						v-for="(bookmark, i) in search_tree"
 						:class="{ active: i === index }"
 						@mousedown.stop="confirm(i)"
 						:key="bookmark.id">
 						{{ bookmark.title }}: {{ bookmark.url }}
-					</div>
-				</div> -->
-				<virtual-list :data="search_tree" :itemSize="100">
-					<div
-						class="search-item"
-						v-for="(bookmark, i) in search_tree"
-						:class="{ active: i === index }"
-						@mousedown.stop="confirm(i)"
-						:key="bookmark.id">
-						{{ bookmark.title }}: {{ bookmark.url }}
-					</div>
-				</virtual-list>
+					</div> -->
+					<virtual-list
+						:data="search_tree"
+						:buffer="1"
+						:itemSize="100"
+						keyName="id"
+						ref="listEle"
+						#="{ slotScope }">
+						<div
+							class="search-item"
+							@mousedown.stop="confirm(slotScope.__index)">
+							{{ slotScope.title }}: {{ slotScope.url }}
+						</div>
+					</virtual-list>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { useFetch } from './composable/useFetch'
 import { debounce } from '@/utils/index'
 import virtualList from './components/virtual-list.vue'
@@ -62,7 +65,7 @@ const input = ref(''),
 const { search_tree, bookmark_tree, message } = useFetch(input)
 const screen = ref(150)
 const inputEle = ref<HTMLInputElement>()
-const listEle = ref<HTMLDivElement>()
+const listEle = ref()
 const index = ref(0)
 const isFocus = ref(false)
 
@@ -81,6 +84,12 @@ message.eventsHandler.on<{ type: 'command'; data: string }>(
 		}
 	}
 )
+
+watch(search_tree, (oldVal, newVal) => {
+	if (oldVal.length !== newVal.length) {
+		listEle.value.reset()
+	}
+})
 
 function keypress(e: KeyboardEvent) {
 	if (e.code === 'ArrowUp') {
@@ -148,14 +157,19 @@ function transitionEnd(e: TransitionEvent) {
 		font-weight: bold;
 		flex-direction: column;
 		transition: all 500ms;
-		overflow-y: auto;
-		max-height: 300px;
+		height: inherit;
+
+		// &::-webkit-scrollbar {
+		// 	display: none; /* Chrome Safari */
+		// }
 		.search-item {
 			text-align: left;
 			padding: 10px;
 			display: block;
+			// height: 50px;
+			overflow: hidden;
 			font-size: 14px;
-			height: 100px;
+			box-sizing: border-box;
 			cursor: pointer;
 			word-break: break-all;
 			box-sizing: border-box;
@@ -168,9 +182,6 @@ function transitionEnd(e: TransitionEvent) {
 				color: white;
 			}
 		}
-		// &::-webkit-scrollbar {
-		// 	display: none; /* Chrome Safari */
-		// }
 	}
 }
 .inputbox {
