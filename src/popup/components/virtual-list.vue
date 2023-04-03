@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onUpdated, ref, watchEffect } from 'vue'
+import { computed, nextTick, onMounted, onUpdated, ref, watchEffect } from 'vue'
 
 const props = withDefaults(
 	defineProps<{
@@ -51,23 +51,37 @@ const wrap = ref<HTMLDivElement>(),
 	visibleCount = computed(() => {
 		return Math.ceil((wrap.value?.clientHeight ?? 0) / props.itemSize)
 	}),
+	aboveCount = computed(() => {
+		return Math.min(
+			startIndex.value,
+			Math.round(props.buffer * visibleCount.value)
+		)
+	}),
+	belowCount = computed(() => {
+		return Math.min(
+			_data.value.length - endIndex.value,
+			Math.round(props.buffer * visibleCount.value)
+		)
+	}),
 	visibleData = computed(() => {
-		const start =
-				startIndex.value -
-				Math.min(startIndex.value, props.buffer * visibleCount.value),
-			end =
-				endIndex.value +
-				Math.min(
-					_data.value.length - endIndex.value,
-					props.buffer * visibleCount.value
-				)
+		const start = startIndex.value - aboveCount.value,
+			end = endIndex.value + belowCount.value
 		// console.log(start, end)
 		return _data.value.slice(start, end)
 	}),
 	startIndex = ref(0),
 	endIndex = computed(() => startIndex.value + visibleCount.value),
 	startOffset = computed(() => {
-		return startIndex.value >= 1 ? _data.value[startIndex.value].__bottom : 0
+		if (startIndex.value >= 1) {
+			const size =
+				_data.value[startIndex.value].__top -
+				(_data.value[startIndex.value - aboveCount.value]
+					? _data.value[startIndex.value - aboveCount.value].__top
+					: 0)
+			return _data.value[startIndex.value - 1].__bottom - size
+		} else {
+			return 0
+		}
 	})
 
 watchEffect(() => {
@@ -79,57 +93,35 @@ watchEffect(() => {
 					...initPositions(index)
 				}
 		  })
-	// console.log(_data.value)
-	// console.log(wrap.value?.querySelector('.virtual-list-container'))
 })
 
 onUpdated(() => {
 	const children = items.value
 
 	if (children === undefined) return
-	// for (let index = 0; index < children.length; index++) {
-	// 	const element = children[index]
-	// 	const rect = element.getBoundingClientRect(),
-	// 		id = +element.getAttribute('_id')!,
-	// 		oldHeight = _data.value[id].__height,
-	// 		dVal = rect.height - oldHeight
+	nextTick(() => {
+		for (let index = 0; index < children.length; index++) {
+			const element = children[index]
+			const rect = element.getBoundingClientRect(),
+				id = +element.getAttribute('_id')!,
+				oldHeight = _data.value[id].__height,
+				dVal = oldHeight - rect.height
 
-	// 	if (dVal) {
-	// 		const current = _data.value[id]
-	// 		current.__height = rect.height
-	// 		current.__bottom = current.__bottom - dVal
-	// 		for (
-	// 			let index_below = id + 1;
-	// 			index_below < _data.value.length;
-	// 			index_below++
-	// 		) {
-	// 			const element_below = _data.value[index_below]
-	// 			element_below.__top = current.__bottom
-	// 			element_below.__bottom = element_below.__bottom - dVal
-	// 		}
-	// 	}
-	// }
-
-	children.forEach(node => {
-		const rect = node.getBoundingClientRect()
-		const height = rect.height
-		const index = +node.getAttribute('_id')
-		const oldHeight = _data.value[index].height
-		const dValue = oldHeight - height
-		//存在差值
-		if (dValue) {
-			_data.value[index].bottom = _data.value[index].bottom - dValue
-			_data.value[index].height = height
-
-			for (let k = index + 1; k < _data.value.length; k++) {
-				_data.value[k].top = _data.value[k - 1].bottom
-				_data.value[k].bottom = _data.value[k].bottom - dValue
+			if (dVal) {
+				_data.value[id].__height = rect.height
+				_data.value[id].__bottom = _data.value[id].__bottom - dVal
+				for (
+					let index_below = id + 1;
+					index_below < _data.value.length;
+					index_below++
+				) {
+					const element_below = _data.value[index_below]
+					element_below.__top = _data.value[index_below - 1].__bottom
+					element_below.__bottom = element_below.__bottom - dVal
+				}
 			}
 		}
 	})
-	// ;[...children].forEach(item => {
-
-	// })
 })
 
 function initPositions(index: number) {
@@ -145,7 +137,7 @@ function wrapScrollHandler(e: UIEvent) {
 	startIndex.value = _data.value.find(
 		item => item?.__bottom > scrollTop
 	)?.__index
-	console.log(scrollTop, startIndex.value, _data.value)
+	// console.log(scrollTop, startIndex.value, _data.value)
 	// startOffset.value = scrollTop - (scrollTop % props.itemSize)
 }
 

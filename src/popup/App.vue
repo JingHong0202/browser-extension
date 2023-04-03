@@ -19,25 +19,17 @@
 				v-model="input" />
 			<span class="label">Search Bookmark</span>
 			<i class="line"></i>
-			<div class="searchbox">
-				<!-- 		:style="
+			<div
+				class="searchbox"
+				:style="
 					isFocus
 						? 'opacity:1;transform:scale(1)'
 						: 'opacity:0;transform:scale(0)'
-				" -->
+				">
 				<div class="search-list">
-					<!-- <div
-						class="search-item"
-						v-for="(bookmark, i) in search_tree"
-						:class="{ active: i === index }"
-						@mousedown.stop="confirm(i)"
-						:key="bookmark.id">
-						{{ bookmark.title }}: {{ bookmark.url }}
-					</div> -->
 					<virtual-list
 						:data="search_tree"
-						:buffer="1"
-						:itemSize="100"
+						:itemSize="50"
 						keyName="id"
 						ref="listEle"
 						#="{ slotScope }">
@@ -221,7 +213,7 @@ function transitionEnd(e: TransitionEvent) {
 		&:valid {
 			~ .label {
 				color: #ffbc00;
-				transform: translateX(-10px) translateY(-34px);
+				transform: translateX(-10px) translateY(-40px);
 				font-size: 0.75em;
 			}
 			~ .line {
