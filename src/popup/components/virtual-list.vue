@@ -11,7 +11,6 @@
 			:style="{ transform: `translate3d(0,${startOffset}px,0)` }">
 			<div
 				class="virtual-item"
-				ref="items"
 				v-for="item in visibleData"
 				:_id="item.__index"
 				:key="item[props.keyName]">
@@ -22,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, onUpdated, ref, watchEffect } from 'vue'
+import { computed, nextTick, onUpdated, ref, watchEffect } from 'vue'
 
 const props = withDefaults(
 	defineProps<{
@@ -38,12 +37,8 @@ const props = withDefaults(
 	}
 )
 
-defineExpose({
-	reset
-})
-
 const wrap = ref<HTMLDivElement>(),
-	items = ref<HTMLDivElement[]>(),
+	// items = ref<HTMLDivElement[]>(),
 	_data = ref<any[]>([]),
 	placeholderHeight = computed(() => {
 		return _data.value[_data.value.length - 1]?.__bottom
@@ -67,7 +62,7 @@ const wrap = ref<HTMLDivElement>(),
 		const start = startIndex.value - aboveCount.value,
 			end = endIndex.value + belowCount.value
 		// console.log(start, end)
-		return _data.value.slice(start, end)
+		return _data.value.slice(start, end + 1)
 	}),
 	startIndex = ref(0),
 	endIndex = computed(() => startIndex.value + visibleCount.value),
@@ -84,6 +79,12 @@ const wrap = ref<HTMLDivElement>(),
 		}
 	})
 
+defineExpose({
+	reset,
+	container: wrap,
+	_data
+})
+
 watchEffect(() => {
 	_data.value = !props.data?.length
 		? []
@@ -96,7 +97,9 @@ watchEffect(() => {
 })
 
 onUpdated(() => {
-	const children = items.value
+	const children = wrap.value?.querySelectorAll(
+		'.virtual-list-container > .virtual-item'
+	)
 
 	if (children === undefined) return
 	nextTick(() => {
@@ -132,7 +135,7 @@ function initPositions(index: number) {
 		__index: index
 	}
 }
-function wrapScrollHandler(e: UIEvent) {
+function wrapScrollHandler() {
 	const scrollTop = wrap.value!.scrollTop
 	startIndex.value = _data.value.find(
 		item => item?.__bottom > scrollTop

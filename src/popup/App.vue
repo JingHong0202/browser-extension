@@ -22,7 +22,7 @@
 			<div
 				class="searchbox"
 				:style="
-					isFocus
+					isFocus && input
 						? 'opacity:1;transform:scale(1)'
 						: 'opacity:0;transform:scale(0)'
 				">
@@ -35,6 +35,8 @@
 						#="{ slotScope }">
 						<div
 							class="search-item"
+							:class="{ active: slotScope.__index === index }"
+							@mouseover.stop="index = slotScope.__index"
 							@mousedown.stop="confirm(slotScope.__index)">
 							{{ slotScope.title }}: {{ slotScope.url }}
 						</div>
@@ -57,7 +59,7 @@ const input = ref(''),
 const { search_tree, bookmark_tree, message } = useFetch(input)
 const screen = ref(150)
 const inputEle = ref<HTMLInputElement>()
-const listEle = ref()
+const listEle = ref<InstanceType<typeof virtualList>>()
 const index = ref(0)
 const isFocus = ref(false)
 
@@ -79,7 +81,7 @@ message.eventsHandler.on<{ type: 'command'; data: string }>(
 
 watch(search_tree, (oldVal, newVal) => {
 	if (oldVal.length !== newVal.length) {
-		listEle.value.reset()
+		listEle.value?.reset()
 	}
 })
 
@@ -91,11 +93,9 @@ function keypress(e: KeyboardEvent) {
 		index.value =
 			index.value >= search_tree.value.length - 1 ? 0 : ++index.value
 	}
-	// if (listEle.value?.children.length) {
-	// 	const target = listEle.value?.children[index.value]
-	// 	// @ts-ignore
-	// 	listEle.value.scroll({ top: target.offsetTop })
-	// }
+	listEle.value?.container?.scrollTo({
+		top: listEle.value?._data[index.value].__top
+	})
 }
 
 function confirm(clickIndex?: number) {
