@@ -137,11 +137,33 @@ function initPositions(index: number) {
 }
 function wrapScrollHandler() {
 	const scrollTop = wrap.value!.scrollTop
-	startIndex.value = _data.value.find(
-		item => item?.__bottom > scrollTop
-	)?.__index
+	startIndex.value = binarySearch(_data.value, scrollTop)
+	// console.log(_data.value.find(
+	// 	item => item?.__bottom > scrollTop
+	// )?.__index)
 	// console.log(scrollTop, startIndex.value, _data.value)
 	// startOffset.value = scrollTop - (scrollTop % props.itemSize)
+}
+
+function binarySearch(searchList: any[], findVal: number) {
+	let start = 0,
+		end = searchList.length - 1,
+		tempIndex = null
+
+	while (start <= end) {
+		const mid = start + ((end - start) >> 1)
+		if (searchList[mid].__bottom > findVal) {
+			if (tempIndex === null || tempIndex > mid) {
+				tempIndex = mid
+			}
+			end = end - 1
+		} else if (searchList[mid].__bottom < findVal) {
+			start = mid + 1
+		} else if (searchList[mid].__bottom === findVal) {
+			return searchList[mid].__index + 1
+		}
+	}
+	return tempIndex
 }
 
 function reset() {
