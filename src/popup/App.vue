@@ -30,6 +30,7 @@
 					<virtual-list
 						:data="search_tree"
 						:itemSize="50"
+						:buffer="0.5"
 						keyName="id"
 						ref="listEle"
 						#="{ slotScope }">
@@ -51,7 +52,7 @@
 import { nextTick, ref, watch } from 'vue'
 import { useFetch } from './composable/useFetch'
 import { debounce } from '@/utils/index'
-import virtualList from './components/virtual-list.vue'
+import virtualList from './components/virtual-list/vertical-virtual-list.vue'
 
 const input = ref(''),
 	show = ref(false),
@@ -82,6 +83,7 @@ message.eventsHandler.on<{ type: 'command'; data: string }>(
 watch(search_tree, (oldVal, newVal) => {
 	if (oldVal.length !== newVal.length) {
 		listEle.value?.reset()
+		index.value = 0
 	}
 })
 
@@ -94,8 +96,9 @@ function keypress(e: KeyboardEvent) {
 			index.value >= search_tree.value.length - 1 ? 0 : ++index.value
 	}
 	listEle.value?.container?.scrollTo({
-		top: listEle.value?._data[index.value].__top
+		top: listEle.value?._data[index.value]?.__top
 	})
+	// console.log(listEle.value?._data[index.value]?.__top, listEle.value?._data[index.value])
 }
 
 function confirm(clickIndex?: number) {
@@ -156,6 +159,7 @@ function transitionEnd(e: TransitionEvent) {
 		// }
 		.search-item {
 			text-align: left;
+			box-sizing: border-box;
 			padding: 10px;
 			display: block;
 			// height: 50px;
@@ -164,7 +168,6 @@ function transitionEnd(e: TransitionEvent) {
 			box-sizing: border-box;
 			cursor: pointer;
 			word-break: break-all;
-			box-sizing: border-box;
 			&:hover {
 				background: #fecd49;
 				color: white;
