@@ -1,21 +1,35 @@
 {
-  "name": "Bookmark Index",
-  "version": "0.0.1",
-  "description": "游览器书签加强插件",
-  "manifest_version": 3,
-  "action": {
-    "default_popup": "popup/popup.html",
-    "default_title": "Click me"
-  },
-  "background": {
-    "service_worker": "scripts/background.js"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "run_at": "document_start",
-      "js": ["scripts/content/inject.js"]
-    }
-  ],
-  "host_permissions": ["<all_urls>"]
+	"name": "Bookmark Index",
+	"version": "0.0.1",
+	"description": "游览器书签加强插件",
+	"manifest_version": 3,
+
+	"background": {
+		"service_worker": "scripts/background.ts"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"run_at": "document_start",
+			"js": ["popup/inject.ts"],
+			"match_origin_as_fallback": true,
+			"runAt": "document_idle"
+		}
+	],
+	"host_permissions": ["<all_urls>"],
+	"permissions": ["bookmarks", "tabs", "commands"],
+	"commands": {
+		"show-search-input": {
+			"suggested_key": {
+				"default": "Alt+S"
+			},
+			"description": "显示/隐藏书签搜索框"
+		}
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["assets/font/Alimama_ShuHeiTi_Bold.ttf"],
+			"matches": ["<all_urls>"]
+		}
+	]
 }
