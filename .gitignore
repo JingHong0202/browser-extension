@@ -4,3 +4,4 @@ dist
 plugin*?
 pnpm-lock.yaml
 .userData
+.DS_Store
